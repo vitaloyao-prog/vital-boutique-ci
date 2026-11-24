@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123c70">
+<title>VITAL BOUTIQUE</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f6fc;color:#172c48}
+header{background:#123c70;color:white;padding:25px 18px;text-align:center}
+header h1{margin:0;font-size:27px}
+header p{margin-bottom:0}
+main{padding:18px;max-width:650px;margin:auto}
+h2{color:#123c70}
+.products{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.product{background:white;border-radius:14px;padding:12px;box-shadow:0 2px 10px #0001}
+.photo{height:115px;border-radius:10px;background:#dce9fa;display:grid;place-items:center;font-size:65px}
+.product h3{font-size:16px;margin:10px 0}
+.price{font-weight:bold;color:#1559a5;font-size:18px}
+button{background:#1559a5;color:white;border:0;border-radius:9px;padding:12px;width:100%;font-weight:bold;margin-top:10px}
+select,input{width:100%;padding:12px;border:1px solid #ccd5e3;border-radius:8px;margin:6px 0}
+.cart{background:white;border-radius:14px;padding:16px;margin-top:22px}
+footer{text-align:center;background:#123c70;color:white;padding:20px;margin-top:25px}
+</style>
+</head>
+<body>
+<header>
+<h1>VITAL BOUTIQUE</h1>
+<p>La mode à ton prix !</p>
+<p>Bienvenue dans notre boutique</p>
+</header>
+<main>
+<h2>Nos vêtements</h2>
+<div class="products">
+<div class="product">
+<div class="photo">👕</div>
+<h3>Complet noir</h3>
+<p class="price">10 000 F CFA</p>
+<button onclick="add('Complet noir',10000)">Ajouter au panier</button>
+</div>
+<div class="product">
+<div class="photo">👔</div>
+<h3>T-shirt</h3>
+<p class="price">1 500 F CFA</p>
+<button onclick="add('T-shirt',1500)">Ajouter au panier</button>
+</div>
+</div>
+<section class="cart">
+<h2>Mon panier 🛒</h2>
+<div id="items">Votre panier est vide.</div>
+<h3 id="total">Total : 0 F CFA</h3>
+<h2>Mes informations</h2>
+<input id="client" placeholder="Nom du client">
+<input id="phone" type="tel" placeholder="Téléphone du client">
+<input id="address" placeholder="Quartier et adresse de livraison">
+<label>Mode de paiement</label>
+<select id="payment">
+<option>Orange Money</option>
+<option>MTN Money</option>
+<option>Paiement à la livraison</option>
+</select>
+<button onclick="order()">Commander sur WhatsApp</button>
+</section>
+</main>
+<footer>
+<strong>VITAL BOUTIQUE</strong>
+<p>Merci pour votre confiance !</p>
+</footer>
+<script>
+let cart=[];
+function add(name,price){
+let item=cart.find(x=>x.name===name);
+if(item)item.qty++;
+else cart.push({name,price,qty:1});
+show();
+}
+function show(){
+let total=0;
+document.getElementById('items').innerHTML=cart.map(x=>{
+total+=x.price*x.qty;
+return `<p>${x.name} × ${x.qty} — ${(x.price*x.qty).toLocaleString('fr-FR')} F</p>`;
+}).join('')||'Votre panier est vide.';
+document.getElementById('total').textContent='Total : '+total.toLocaleString('fr-FR')+' F CFA';
+}
+function order(){
+if(!cart.length){alert('Ajoutez un vêtement au panier.');return;}
+let name=document.getElementById('client').value.trim();
+let phone=document.getElementById('phone').value.trim();
+let address=document.getElementById('address').value.trim();
+if(!name||!phone||!address){alert('Remplissez vos informations.');return;}
+let total=cart.reduce((s,x)=>s+x.price*x.qty,0);
+let msg='Bonjour VITAL BOUTIQUE, je souhaite commander :\n'+
+cart.map(x=>x.name+' x '+x.qty).join('\n')+
+'\nTotal : '+total+' F CFA'+
+'\nClient : '+name+'\nTéléphone : '+phone+
+'\nAdresse : '+address+
+'\nPaiement : '+document.getElementById('payment').value;
+alert('Remplacez le numéro WhatsApp du vendeur dans le code avant de recevoir les commandes.');
+window.open('https://wa.me/225XXXXXXXXXX?text='+encodeURIComponent(msg),'_blank');
+}
+</script>
+</body>
+</html>
